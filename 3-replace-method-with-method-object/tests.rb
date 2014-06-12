@@ -7,12 +7,12 @@ class TestPurchaseMailer < Minitest::Test
   end
 
   def test_confirmation
-    matched_string = "Hi Jon snow, Ygritte just purchased 1 playbook of your store."
+    matched_string = "Hi jonsnow, Ygritte just purchased 2 Playbook of your store."
     assert_equal @purchase_mailer.confirmation(1,1,1), matched_string
   end
 
   def test_after_confirmation
-    matched_string = "Hi Jon snow, the item playbook was purchased of your store."
+    matched_string = "Hi jonsnow, the item Playbook was purchased of your store."
     assert_equal @purchase_mailer.after_confirmation(1,1), matched_string
   end
 

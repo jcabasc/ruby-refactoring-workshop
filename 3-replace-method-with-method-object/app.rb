@@ -13,7 +13,7 @@ class PurchaseMailer
       account_username: @account.username,
       item_name: @item.name
     }
-    TemplateGenerator.render_confirmation_email(data)
+    TemplateGenerator.send_email('confirmation', data)
   end
 
   def after_confirmation(account_id, item_id)
@@ -24,7 +24,7 @@ class PurchaseMailer
       account_username: @account.username,
       item_name: @item.name
     }
-    TemplateGenerator.render_after_confirmation_email(data)
+    TemplateGenerator.send_email('after_confirmation', data)
   end
 end
 

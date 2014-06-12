@@ -1,42 +1,27 @@
 class User
-  attr_reader :fullname, :email, :authentications, :followers
+  attr_reader :id, :fullname, :authentications
 
-  def initialize(fullname, email, authentications, followers)
+  def initialize(id, fullname, authentications)
+    @id = id
     @fullname = fullname
-    @email = email
     @authentications = authentications
-    @followers = followers
   end
 
-  def self.find(id, scope="instantiate_with_everything")
-    self.send(scope)
+  def self.find(id)
+    self.all.map{|user| return user if user.id == id }
+    nil
   end
 
   def self.all
-    user_with_everything = User.find(1, "instantiate_with_everything")
-    user_without_followers_and_email = User.find(1, "instantiate_without_anything")
-    [user_with_everything, user_without_followers_and_email]
-  end
-
-  private
-
-  def self.instantiate_with_everything
-    authenications = [ Authentication.new("facebook") ]
     followers = [ :new_follower ]
-    User.new("Jon snow","jon.snow@got.com", authenications, followers)
-  end
-
-  def self.instantiate_without_authentication
-    followers = [ :new_follower ]
-    User.new("Tyrion lannister","tyrion.lannister@got.com", [], followers)
-  end
-
-  def self.instantiate_without_anything
-    User.new("Jon snow","", [], [])
+    authentications = [ Authentication.new("facebook", "jon.snow@got.com", "watchman", followers) ]
+    user_with_everything = User.new(1, "Jon snow", authentications)
+    user_without_anything = User.new(2, "Tyrion lannister", [])
+    [user_with_everything, user_without_anything]
   end
 end
 
-class Authentication < Struct.new(:provider)
+class Authentication < Struct.new(:provider, :email, :username, :followers)
 end
 
 class SessionController
@@ -44,3 +29,4 @@ class SessionController
   attr_reader :show, :index
 end
 
+User.all

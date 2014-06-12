@@ -7,7 +7,7 @@ class User
   end
 
   def followers_count
-    followers.count
+    authentication.followers.count
   end
 end
 
@@ -21,6 +21,7 @@ class SessionController
     User.all.map do |user|
       @users << {
         email: email_of(user),
+        username: username_of(user),
         followers: followers_from(user)
       }
     end
@@ -40,26 +41,37 @@ class SessionController
       if current_user.authentication
         "Hi #{current_user.fullname}, you're logged in with #{current_user.authentication.provider}"
       else
-        "Hi Demo, you're logged in with DemoProvider"
+        "Hi #{current_user.fullname}, you're logged in with DemoProvider"
       end
+    else
+      "Hi Demo, you're logged in with DemoProvider"
     end
   end
 
   def followers_from(user)
-    if user.followers.any?
-      "You have #{current_user.followers_count} followers"
+    if user.authentication && user.authentication.followers.any?
+      "You have #{user.followers_count} followers"
     else
       "You have 0 followers"
     end
   end
 
   def email_of(user)
-    if user.email.length != 0
-      user.email
+    if user.authentication && user.authentication.email
+      user.authentication.email
     else
       "demo@test.com"
     end
   end
+
+  def username_of(user)
+    if user.authentication && user.authentication.username
+      user.authentication.username
+    else
+      "demo"
+    end
+  end
+
 end
 
 require './tests' if __FILE__ == $0

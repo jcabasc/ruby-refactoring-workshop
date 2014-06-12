@@ -1,28 +1,47 @@
-class Account < Struct.new(:email, :username)
+class Account < Struct.new(:id, :email, :username)
   def self.find(id)
-    new("jon.snow@got.com", "Jon snow")
+    self.all.map{|account| return account if account.id == id }
+    nil
+  end
+
+  def self.all
+    [ Account.new(1, "jon.snow@got.com", "jonsnow") ]
   end
 end
 
-class Item < Struct.new(:name, :source)
+class Item < Struct.new(:id, :name, :source)
   def self.find(id)
-    new("playbook", "Amazon")
+    self.all.map{|item| return item if item.id == id }
+    nil
+  end
+
+  def self.all
+    [ Item.new(1,"Playbook", "Amazon") ]
   end
 end
 
-class Purchase < Struct.new(:name, :quantity)
+class Purchase < Struct.new(:id, :name, :quantity)
   def self.find(id)
-    new("Ygritte", 1)
+    self.all.map{|purchase| return purchase if purchase.id == id }
+    nil
+  end
+
+  def self.all
+    [ Purchase.new(1,"Ygritte", 2) ]
   end
 end
 
 class TemplateGenerator
-  def self.render_confirmation_email(data)
+  def self.confirmation(data)
     "Hi #{data[:account_username]}, #{data[:purchase_name]} just purchased #{data[:purchase_quantity]} #{data[:item_name]} of your store."
   end
 
-  def self.render_after_confirmation_email(data)
+  def self.after_confirmation(data)
     "Hi #{data[:account_username]}, the item #{data[:item_name]} was purchased of your store."
+  end
+
+  def self.send_email(type, data)
+    self.send(type, data)
   end
 end
 
