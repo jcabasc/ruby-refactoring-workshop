@@ -1,4 +1,4 @@
-require './setup'
+require File.expand_path('../setup.rb', __FILE__)
 
 class PurchaseMailer
   def confirmation(account_id, item_id, purchase_id)
@@ -28,4 +28,4 @@ class PurchaseMailer
   end
 end
 
-require './tests' if __FILE__ == $0
+require File.expand_path('../tests.rb', __FILE__) if __FILE__ == $0
