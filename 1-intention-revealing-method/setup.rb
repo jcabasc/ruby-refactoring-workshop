@@ -1,18 +1,22 @@
-class User < Struct.new(:email, :role)
+class User < Struct.new(:id, :email, :role)
   def projects
-    [:private_project]
+    [:private_project, :public_project]
   end
-  def has_role?(role)
-    self.role == role.to_s
-  end
-end
 
-class Project
-  def self.all
-    [:public_project, :private_project]
+  def public_projects
+    [:public_project]
   end
+
+   def self.find(id)
+        self.all.map{|user| return user if user.id == id }
+        nil
+   end
+
+    def self.all
+      [new(1, 'jesse@savewalterwhite.com','student')]
+    end
 end
 
 class ProjectsController
-  attr_accessor :current_user, :flash_msg, :projects
+  attr_accessor :current_user, :flash_msg, :projects, :params, :user
 end
