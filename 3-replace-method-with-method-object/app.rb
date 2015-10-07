@@ -1,30 +1,34 @@
 require File.expand_path('../setup.rb', __FILE__)
 
-class PurchaseMailer
-  def confirmation(account_id, item_id, purchase_id)
-    @account = Account.find(account_id)
-    @item = Item.find(item_id)
-    @purchase = Purchase.find(purchase_id)
-    data = {
-      purchase_name: @purchase.name,
-      purchase_quantity: @purchase.quantity,
-      item_source: @item.source,
-      account_email: @account.email,
-      account_username: @account.username,
-      item_name: @item.name
-    }
-    TemplateGenerator.send_email('confirmation', data)
+class Student
+  def calculate_final_grade_status(raw_average)
+
+    derived_precision = precision(raw_average)
+    whole_average = average(raw_average)
+
+    if derived_precision < 0.25
+      final_grade = whole_average
+    elsif derived_precision >= 0.25 && derived_precision < 0.75
+      final_grade = whole_average + 0.50
+    else
+      final_grade = raw_average.ceil
+    end
+
+    if final_grade < 3.75
+      "Fail, you know nothing #{self.student_name}"
+    else
+      "Pass, you're doing it great #{self.student_name}"
+    end
   end
 
-  def after_confirmation(account_id, item_id)
-    @account = Account.find(account_id)
-    @item = Item.find(item_id)
-    data = {
-      account_email: @account.email,
-      account_username: @account.username,
-      item_name: @item.name
-    }
-    TemplateGenerator.send_email('after_confirmation', data)
+  private
+
+  def average(raw_average)
+    raw_average.to_i
+  end
+
+  def precision(raw_average)
+    (raw_average - average(raw_average)).round(2)
   end
 end
 
